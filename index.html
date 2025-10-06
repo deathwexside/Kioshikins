@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kioshikins - Главная</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body oncontextmenu="return false;">
+
+<nav>
+    <div class="logo">Kioshikins</div>
+    <div class="menu">
+        <a href="info.html">Обо мне</a>
+        <a href="player.html" class="btn-nav">Смотреть стрим</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <h1 class="fade-in">Привет, я Kioshikins</h1>
+    <p class="fade-in delay-1">Стримерша, контент-креатор и вайбовый стример, которая будет рада каждому на стриме!</p>
+    <a href="player.html" class="btn fade-in delay-2">Смотреть стрим</a>
+</header>
+
+<footer>
+    © 2025 Kioshikins
+</footer>
+
+<script>
+// Анимация появления элементов
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold: 0.2 };
+const appearOnScroll = new IntersectionObserver((entries, appearOnScroll) => {
+    entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        entry.target.classList.add('appear');
+        appearOnScroll.unobserve(entry.target);
+    });
+}, appearOptions);
+faders.forEach(fader => appearOnScroll.observe(fader));
+
+// Параллакс-фон
+window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    document.body.style.backgroundPositionY = `${scrolled * 0.3}px`;
+});
+</script>
+
+</body>
+</html>
