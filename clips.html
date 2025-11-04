@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kioshikins - Клипы</title>
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Сразу добавляем класс темы в <html>, до рендера страницы -->
+<script>
+  const theme = localStorage.getItem("theme") || "sage";
+  document.documentElement.classList.add("theme-" + theme);
+</script>
+
+<style>
+/* ====== CLIPS PAGE ====== */
+.clips-section {
+  max-width: 800px;
+  margin: 100px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.clips-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+.clips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ====== CLIP CARD ====== */
+.clip-item {
+  background: rgba(0,0,0,0.45);
+  border-radius: 16px;
+  padding: 24px 28px;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+.clip-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px var(--accent-color);
+}
+.clip-item:active { transform: scale(0.99); }
+
+/* ====== PLAYER ====== */
+.player-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+.player-box {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  background: rgba(0,0,0,0.8);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 40px var(--accent-color);
+  transform: scale(0.95);
+  animation: scaleIn 0.25s ease forwards;
+}
+@keyframes scaleIn {
+  to {transform: scale(1);}
+}
+
+.player-box video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  font-size: 26px;
+  color: var(--accent-color);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: rgba(255,255,255,0.05);
+}
+.controls input[type="range"] {
+  width: 100px;
+}
+.controls select {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+</style>
+</head>
+<body oncontextmenu="return false;">
+
+<nav>
+  <div class="logo">Kioshikins</div>
+  <div class="menu">
+    <a href="index.html">Главная</a>
+    <a href="info.html">Обо мне</a>
+    <a href="gallery.html">Галерея</a>
+	<a href="clips.html">Клипы</a>
+    <a href="theme.html" class="btn-nav">Темы</a>
+    <a href="player.html" class="btn-nav">Смотреть стрим</a>
+  </div>
+</nav>
+
+<section class="clips-section fade-in">
+  <h1>Клипы Kioshikins</h1>
+  <div class="clips-list">
+    <div class="clip-item" data-video="videos/clip1.mp4">🎬 Снос еблетов</div>
+    <div class="clip-item" data-video="videos/clip2.mp4">💥 Хороший смок от Clove</div>
+    <div class="clip-item" data-video="videos/clip3.mp4">😵‍💫 Ультра аим от брича</div>
+  </div>
+</section>
+
+<!-- Player Overlay -->
+<div class="player-overlay" id="playerOverlay">
+  <div class="player-box">
+    <span class="close-btn" id="closePlayer">&times;</span>
+    <video id="clipVideo" controls></video>
+    <div class="controls">
+      <label>Громкость: <input type="range" id="volume" min="0" max="1" step="0.05" value="1"></label>
+      <label>Скорость:
+        <select id="speed">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2">2x</option>
+        </select>
+      </label>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2025 Kioshikins
+</footer>
+
+<script>
+// ===== Анимация появления элементов =====
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold: 0.2 };
+const appearOnScroll = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        entry.target.classList.add('appear');
+        observer.unobserve(entry.target);
+    });
+}, appearOptions);
+faders.forEach(fader => appearOnScroll.observe(fader));
+
+// ===== Плеер клипов =====
+const overlay = document.getElementById('playerOverlay');
+const video = document.getElementById('clipVideo');
+const closeBtn = document.getElementById('closePlayer');
+const volumeControl = document.getElementById('volume');
+const speedSelect = document.getElementById('speed');
+
+document.querySelectorAll('.clip-item').forEach(clip => {
+  clip.addEventListener('click', () => {
+    const src = clip.getAttribute('data-video');
+    video.src = src;
+    overlay.style.display = 'flex';
+    video.play();
+  });
+});
+
+closeBtn.addEventListener('click', () => {
+  overlay.style.display = 'none';
+  video.pause();
+  video.src = '';
+});
+
+volumeControl.addEventListener('input', () => { video.volume = volumeControl.value; });
+speedSelect.addEventListener('change', () => { video.playbackRate = speedSelect.value; });
+
+// ===== Смена темы =====
+function applyTheme(theme) {
+  document.documentElement.classList.remove('theme-sage','theme-omen','theme-clove');
+  document.documentElement.classList.add('theme-'+theme);
+  
+  const backgrounds = { sage: 'font1.png', omen: 'font2.png', clove: 'font3.png' };
+  document.body.style.background = `url('${backgrounds[theme]}') no-repeat center center fixed`;
+  document.body.style.backgroundSize = 'cover';
+}
+
+const savedTheme = localStorage.getItem('theme') || 'sage';
+applyTheme(savedTheme);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kioshikins - Галерея</title>
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Сразу добавляем класс темы в <html>, до рендера страницы -->
+<script>
+  const theme = localStorage.getItem("theme") || "sage";
+  document.documentElement.classList.add("theme-" + theme);
+</script>
+
+</head>
+<body oncontextmenu="return false;">
+
+<nav>
+    <div class="logo">Kioshikins</div>
+    <div class="menu">
+        <a href="index.html">Главная</a>
+        <a href="info.html">Обо мне</a>
+		<a href="clips.html">Клипы</a>
+        <a href="theme.html" class="btn-nav">Темы</a>
+        <a href="player.html" class="btn-nav">Смотреть стрим</a>
+    </div>
+</nav>
+
+<section class="gallery-section fade-in">
+    <div class="carousel" id="carousel">
+        <div class="carousel-track" id="carousel-track">
+            <!-- 10 фоток + дубли для бесконечного эффекта -->
+            <img src="photos/photo1.jpg" alt="1" class="carousel-item">
+            <img src="photos/photo2.jpg" alt="2" class="carousel-item">
+            <img src="photos/photo3.jpg" alt="3" class="carousel-item">
+            <img src="photos/photo4.jpg" alt="4" class="carousel-item">
+            <img src="photos/photo5.jpg" alt="5" class="carousel-item">
+            <img src="photos/photo6.jpg" alt="6" class="carousel-item">
+            <img src="photos/photo7.jpg" alt="7" class="carousel-item">
+            <img src="photos/photo8.jpg" alt="8" class="carousel-item">
+            <img src="photos/photo9.jpg" alt="9" class="carousel-item">
+            <img src="photos/photo10.jpg" alt="10" class="carousel-item">
+            <img src="photos/photo1.jpg" alt="1" class="carousel-item">
+            <img src="photos/photo2.jpg" alt="2" class="carousel-item">
+            <img src="photos/photo3.jpg" alt="3" class="carousel-item">
+            <img src="photos/photo4.jpg" alt="4" class="carousel-item">
+            <img src="photos/photo5.jpg" alt="5" class="carousel-item">
+            <img src="photos/photo6.jpg" alt="6" class="carousel-item">
+            <img src="photos/photo7.jpg" alt="7" class="carousel-item">
+            <img src="photos/photo8.jpg" alt="8" class="carousel-item">
+            <img src="photos/photo9.jpg" alt="9" class="carousel-item">
+            <img src="photos/photo10.jpg" alt="10" class="carousel-item">
+            <img src="photos/photo11.jpg" alt="11" class="carousel-item">
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox">
+    <span class="close">&times;</span>
+    <img class="lightbox-img" src="">
+</div>
+
+<footer>
+    © 2025 Kioshikins
+</footer>
+
+<script>
+// ===== Смена темы =====
+function applyTheme(theme) {
+    document.documentElement.classList.remove('theme-sage','theme-omen','theme-clove');
+    document.documentElement.classList.add('theme-'+theme);
+
+    const backgrounds = { sage: 'font1.png', omen: 'font2.png', clove: 'font3.png' };
+    document.body.style.background = `url('${backgrounds[theme]}') no-repeat center center fixed`;
+    document.body.style.backgroundSize = 'cover';
+}
+
+const savedTheme = localStorage.getItem('theme') || 'sage';
+applyTheme(savedTheme);
+
+// ===== Анимация появления =====
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold: 0.2 };
+const appearOnScroll = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        entry.target.classList.add('appear');
+        observer.unobserve(entry.target);
+    });
+}, appearOptions);
+faders.forEach(fader => appearOnScroll.observe(fader));
+
+// ===== Бесконечная автокарусель =====
+const track = document.getElementById('carousel-track');
+let position = 0;
+const speed = 0.3;
+
+function animate() {
+    position -= speed;
+    if(Math.abs(position) >= track.scrollWidth / 2) position = 0;
+    track.style.transform = `translateX(${position}px)`;
+    requestAnimationFrame(animate);
+}
+animate();
+
+// ===== Lightbox =====
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.querySelector('.lightbox-img');
+const carousel = document.getElementById('carousel');
+const carouselItems = document.querySelectorAll('.carousel-item');
+const closeBtn = document.querySelector('.close');
+
+carouselItems.forEach(item => {
+    item.addEventListener('click', () => {
+        carousel.style.display = 'none';
+        lightbox.style.display = 'flex';
+        lightboxImg.src = item.src;
+    });
+});
+
+function closeLightbox() {
+    lightbox.style.display = 'none';
+    carousel.style.display = 'flex';
+}
+
+closeBtn.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => {
+    if(e.target !== lightboxImg) closeLightbox();
+});
+</script>
+
+</body>
+</html>

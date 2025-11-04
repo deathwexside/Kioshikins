@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Выбор темы — Kioshikins</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.theme-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.theme-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.theme-card {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1.5rem;
+    border-radius: 20px;
+    width: 250px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.theme-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px var(--accent-color);
+}
+
+.theme-card img {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.theme-card h3 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.theme-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Навигация */
+nav {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:1rem 3rem;
+    background:rgba(0,0,0,0.35);
+    position:fixed;
+    width:100%;
+    top:0;
+    z-index:100;
+    backdrop-filter: blur(8px);
+}
+
+nav .logo { font-size:1.8rem; font-weight:bold; letter-spacing:2px; color:var(--accent-color); }
+
+nav .menu a {
+    margin-left:1.5rem;
+    text-decoration:none;
+    color:var(--accent-color);
+    font-weight:500;
+    transition:0.3s;
+}
+
+nav .menu a:hover { 
+    color:var(--text-color); 
+    text-shadow:0 0 10px var(--accent-color),0 0 20px var(--text-color); 
+}
+
+.btn-nav { 
+    padding:0.5rem 1.5rem;
+    border-radius:50px;
+    background:linear-gradient(45deg,var(--accent-color),#0040ff);
+    color:#fff;
+    text-decoration:none;
+    box-shadow:0 0 15px rgba(0,210,255,0.6);
+    transition: all 0.4s;
+}
+.btn-nav:hover { 
+    transform:scale(1.1); 
+    box-shadow:0 0 25px rgba(0,210,255,0.9); 
+}
+
+/* Футер */
+footer { 
+    width:100%; 
+    text-align:center; 
+    padding:1rem 0; 
+    background:rgba(0,0,0,0.35); 
+    margin-top:auto; 
+    backdrop-filter: blur(8px); 
+}
+</style>
+</head>
+<body oncontextmenu="return false;">
+
+<nav>
+  <div class="logo">Kioshikins</div>
+  <div class="menu">
+    <a href="index.html">Главная</a>
+    <a href="info.html">Обо мне</a>
+    <a href="gallery.html">Галерея</a>
+    <a href="clips.html">Клипы</a>
+    <a href="theme.html" class="btn-nav">Темы</a>
+    <a href="player.html" class="btn-nav">Смотреть стрим</a>
+  </div>
+</nav>
+
+<section class="theme-container">
+  <h1>Выберите тему сайта</h1>
+  <div class="theme-options">
+
+    <div class="theme-card" data-theme="sage">
+      <img src="font1.png" alt="Sage Theme">
+      <h3>Sage</h3>
+      <p>Бирюзово-голубые оттенки. Спокойная и чистая атмосфера.</p>
+    </div>
+
+    <div class="theme-card" data-theme="omen">
+      <img src="font2.png" alt="Omen Theme">
+      <h3>Omen</h3>
+      <p>Глубокие фиолетово-синие цвета в духе тьмы и загадочности.</p>
+    </div>
+
+    <div class="theme-card" data-theme="clove">
+      <img src="font3.png" alt="Clove Theme">
+      <h3>Clove</h3>
+      <p>Мягкие розово-фиолетовые оттенки, энергичная и позитивная атмосфера.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer>© 2025 Kioshikins</footer>
+
+<script>
+// Смена темы
+document.querySelectorAll('.theme-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const selectedTheme = card.dataset.theme;
+    localStorage.setItem('theme', selectedTheme);
+    applyTheme(selectedTheme);
+  });
+});
+
+function applyTheme(theme) {
+  document.documentElement.classList.remove('theme-sage', 'theme-omen', 'theme-clove');
+  document.documentElement.classList.add('theme-' + theme);
+
+  // Обновляем фон на body
+  let bg = 'font1.png';
+  if (theme === 'omen') bg = 'font2.png';
+  if (theme === 'clove') bg = 'font3.png';
+  document.body.style.backgroundImage = `url('${bg}')`;
+}
+
+// Применить сохранённую тему при загрузке
+const savedTheme = localStorage.getItem('theme') || 'sage';
+applyTheme(savedTheme);
+</script>
+
+</body>
+</html>

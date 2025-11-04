@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kioshikins - Прямой эфир</title>
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Сразу добавляем класс темы в <html>, до рендера страницы -->
+<script>
+  const theme = localStorage.getItem("theme") || "sage";
+  document.documentElement.classList.add("theme-" + theme);
+</script>
+
+</head>
+<body oncontextmenu="return false;">
+
+<nav>
+    <div class="logo">Kioshikins</div>
+    <div class="menu">
+        <a href="index.html">Главная</a>
+        <a href="gallery.html">Галерея</a>
+        <a href="info.html">Обо мне</a>
+		<a href="clips.html">Клипы</a>
+        <a href="theme.html" class="btn-nav">Темы</a>
+        <a href="player.html" class="btn-nav">Смотреть стрим</a>
+    </div>
+</nav>
+
+<section class="player-section fade-in">
+    <div class="player-container">
+        <iframe 
+            src="https://player.twitch.tv/?channel=Kioshikins&parent=kioshikins.netlify.app" 
+            frameborder="0" 
+            allowfullscreen>
+        </iframe>
+    </div>
+</section>
+
+<footer>
+    © 2025 Kioshikins
+</footer>
+
+<script>
+// ===== Анимация появления плеера =====
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold: 0.2 };
+const appearOnScroll = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        entry.target.classList.add('appear');
+        observer.unobserve(entry.target);
+    });
+}, appearOptions);
+faders.forEach(fader => appearOnScroll.observe(fader));
+
+// ===== Смена темы =====
+function applyTheme(theme) {
+    document.documentElement.classList.remove('theme-sage','theme-omen','theme-clove');
+    document.documentElement.classList.add('theme-'+theme);
+
+    const backgrounds = { sage: 'font1.png', omen: 'font2.png', clove: 'font3.png' };
+    document.body.style.background = `url('${backgrounds[theme]}') no-repeat center center fixed`;
+    document.body.style.backgroundSize = 'cover';
+}
+
+const savedTheme = localStorage.getItem('theme') || 'sage';
+applyTheme(savedTheme);
+</script>
+
+</body>
+</html>

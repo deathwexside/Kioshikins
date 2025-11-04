@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kioshikins - Информация</title>
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Сразу добавляем класс темы в <html>, до рендера страницы -->
+<script>
+  const theme = localStorage.getItem("theme") || "sage";
+  document.documentElement.classList.add("theme-" + theme);
+</script>
+
+</head>
+<body oncontextmenu="return false;">
+
+<nav>
+    <div class="logo">Kioshikins</div>
+    <div class="menu">
+        <a href="index.html">Главная</a>
+        <a href="gallery.html">Галерея</a>
+        <a href="clips.html">Клипы</a>
+        <a href="theme.html" class="btn-nav">Темы</a>
+        <a href="player.html" class="btn-nav">Смотреть стрим</a>
+    </div>
+</nav>
+
+<section class="info-section fade-in">
+    <div class="card">
+        <img src="avatar.png" alt="Kioshikins" class="avatar">
+        <h2>Kioshikins</h2>
+        <p><strong>Main:</strong> Sage</p>
+        <p><strong>Любимые игры:</strong> Valorant, Minecraft, Dead by Daylight, R.E.P.O.</p>
+        <p><strong>Страна:</strong> Россия</p>
+        <p><strong>Возраст:</strong> 20 годиков</p>
+        <p><strong>О себе:</strong> Люблю стримить и общаться с подписчиками, создавать позитивную атмосферу. Стримлю регулярно, очень добрая стримерша, но иногда могу побомбить.</p>
+
+        <div class="buttons">
+            <a href="https://www.donationalerts.com/r/kioshisaito" class="btn-social">💰 Донат</a>
+            <a href="https://www.twitch.tv/kioshikins" class="btn-social">🎥 Twitch</a>
+            <a href="https://t.me/kioskvaloranta" class="btn-social">📱 Telegram</a>
+            <a href="https://discord.gg/VT9jCsc92E" class="btn-social">💬 Discord</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    © 2025 Kioshikins
+</footer>
+
+<script>
+// ===== Анимация появления элементов =====
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold: 0.2 };
+const appearOnScroll = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        entry.target.classList.add('appear');
+        observer.unobserve(entry.target);
+    });
+}, appearOptions);
+faders.forEach(fader => appearOnScroll.observe(fader));
+
+// ===== Функция смены темы =====
+function applyTheme(theme) {
+    document.documentElement.classList.remove('theme-sage', 'theme-omen', 'theme-clove');
+    document.documentElement.classList.add('theme-' + theme);
+
+    const backgroundImages = {
+        sage: "font1.png",
+        omen: "font2.png",
+        clove: "font3.png"
+    };
+    document.body.style.background = `url('${backgroundImages[theme]}') no-repeat center center fixed`;
+    document.body.style.backgroundSize = "cover";
+}
+
+// Применяем сохранённую тему при загрузке
+const savedTheme = localStorage.getItem('theme') || 'sage';
+applyTheme(savedTheme);
+</script>
+
+</body>
+</html>
